@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem, Jumbotron } from 'reactstrap';
+import { Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem, Jumbotron, Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 
 class Header extends Component {
@@ -7,10 +7,13 @@ class Header extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isNavOpen: false
+            isNavOpen: false,
+            isModalOpen: false
         };
-        //this points to method so in code you can just specify trhis.toggle nav rather than the function inside the code
+        //this points to method so in code you can just specify this.toggle nav rather than the function inside the code
         this.toggleNav = this.toggleNav.bind(this);
+        this.toggleModal = this.toggleModal.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
     }
 
     toggleNav(){
@@ -19,6 +22,19 @@ class Header extends Component {
                 isNavOpen: !this.state.isNavOpen
             })
         )
+    }
+
+    toggleModal() {
+        this.setState({
+            isModalOpen: !this.state.isModalOpen
+        })
+    }
+
+    handleLogin(event) {
+        this.toggleModal();
+        alert("Username:" + this.user.value + "Password:" + this.password.value
+        + "Remember: " + this.remember.checked);
+        event.preventDefault();
     }
 
     render() {
@@ -54,6 +70,13 @@ class Header extends Component {
                         </NavLink>
                     </NavItem>
                 </Nav>
+                <Nav className="ml-auto" navbar>
+                    <NavItem>
+                        <Button outline onClick={this.toggleModal}>
+                            <span className="fa fa-sign-in fa-lg"></span> Login
+                        </Button>
+                    </NavItem>
+                </Nav>
                 </Collapse>
         </div>
       </Navbar>
@@ -67,6 +90,26 @@ class Header extends Component {
                </div>
            </div>
        </Jumbotron>
+       <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+           <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
+           <ModalBody>
+               <Form onSubmit={this.handleLogin}>
+                   <FormGroup>
+                       <Label htmlFor="username">Username</Label>
+                       <Input type="text" id="username" name="username" innnerRef={(input) => this.username = input}></Input>
+                   </FormGroup>
+                   <FormGroup>
+                       <Label htmlFor="password">Password</Label>
+                       <Input type="text" id="password" name="password" innnerRef={(input) => this.password = input}></Input>
+                   </FormGroup>
+                   <FormGroup check>
+                       <Input type="checkbox" name="remember" innnerRef={(input) => this.remember = input}></Input>
+                       Remember me
+                   </FormGroup>
+                   <Button type="submit" value="submit" className="bg-primary" color="primary">Login</Button>
+               </Form>
+           </ModalBody>
+       </Modal>
     </React.Fragment>
     );
   }
